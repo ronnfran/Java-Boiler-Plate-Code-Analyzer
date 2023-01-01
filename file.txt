@@ -1,0 +1,15 @@
+import java.io.File;  // Import the File class
+import java.util.Scanner; // Import the Scanner class to read text files
+
+public class BPCodeAnalyzer {
+    public static void main(String []args) {
+        System.out.println("I am the Java Boilerplate Code Analyzer\n");
+        File file = new File("BPCodeAnalyzer.java");
+        Scanner reader = new Scanner(file);
+        while(reader.hasNextLine()) {
+            String data = reader.nextLine();
+            System.out.println(data);
+        }
+        reader.close();
+    }
+}
