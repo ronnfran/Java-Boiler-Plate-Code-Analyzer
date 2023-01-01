@@ -18,78 +18,118 @@ public class BPCodeAnalyzer {
 
   //count key words
   public static void FindKeywords() throws FileNotFoundException {
-    HashMap<String, Integer> javaKeywords = new HashMap<String, Integer>();
+    HashMap<String, Integer> keywordHashMap = new HashMap<String, Integer>();
 
     // initialize HashMap
-    javaKeywords.put("abstract", 0);
-    javaKeywords.put("boolean", 0);
-    javaKeywords.put("break", 0);
-    javaKeywords.put("byte", 0);
-    javaKeywords.put("case", 0);
-    javaKeywords.put("catch", 0);
-    javaKeywords.put("char", 0);
-    javaKeywords.put("class", 0);
-    javaKeywords.put("continue", 0);
-    javaKeywords.put("default", 0);
-    javaKeywords.put("do", 0);
-    javaKeywords.put("double", 0);
-    javaKeywords.put("else", 0);
-    javaKeywords.put("enum", 0);
-    javaKeywords.put("extends", 0);
-    javaKeywords.put("final", 0);
-    javaKeywords.put("finally", 0);
-    javaKeywords.put("float", 0);
-    javaKeywords.put("for", 0);
-    javaKeywords.put("if", 0);
-    javaKeywords.put("implements", 0);
-    javaKeywords.put("import", 0);
-    javaKeywords.put("instanceof", 0);
-    javaKeywords.put("int", 0);
-    javaKeywords.put("interface", 0);
-    javaKeywords.put("long", 0);
-    javaKeywords.put("new", 0);
-    javaKeywords.put("package", 0);
-    javaKeywords.put("private", 0);
-    javaKeywords.put("protected", 0);
-    javaKeywords.put("public", 0);
-    javaKeywords.put("return", 0);
-    javaKeywords.put("short", 0);
-    javaKeywords.put("static", 0);
-    javaKeywords.put("super", 0);
-    javaKeywords.put("switch", 0);
-    javaKeywords.put("this", 0);
-    javaKeywords.put("throw", 0);
-    javaKeywords.put("throws", 0);
-    javaKeywords.put("try", 0);
-    javaKeywords.put("void", 0);
-    javaKeywords.put("while", 0);
+    keywordHashMap.put("abstract", 0);
+    keywordHashMap.put("boolean", 0);
+    keywordHashMap.put("break", 0);
+    keywordHashMap.put("byte", 0);
+    keywordHashMap.put("case", 0);
+    keywordHashMap.put("catch", 0);
+    keywordHashMap.put("char", 0);
+    keywordHashMap.put("class", 0);
+    keywordHashMap.put("continue", 0);
+    keywordHashMap.put("default", 0);
+    keywordHashMap.put("do", 0);
+    keywordHashMap.put("double", 0);
+    keywordHashMap.put("else", 0);
+    keywordHashMap.put("enum", 0);
+    keywordHashMap.put("extends", 0);
+    keywordHashMap.put("final", 0);
+    keywordHashMap.put("finally", 0);
+    keywordHashMap.put("float", 0);
+    keywordHashMap.put("for", 0);
+    keywordHashMap.put("if", 0);
+    keywordHashMap.put("implements", 0);
+    keywordHashMap.put("import", 0);
+    keywordHashMap.put("instanceof", 0);
+    keywordHashMap.put("int", 0);
+    keywordHashMap.put("interface", 0);
+    keywordHashMap.put("long", 0);
+    keywordHashMap.put("new", 0);
+    keywordHashMap.put("package", 0);
+    keywordHashMap.put("private", 0);
+    keywordHashMap.put("protected", 0);
+    keywordHashMap.put("public", 0);
+    keywordHashMap.put("return", 0);
+    keywordHashMap.put("short", 0);
+    keywordHashMap.put("static", 0);
+    keywordHashMap.put("string", 0);
+    keywordHashMap.put("super", 0);
+    keywordHashMap.put("switch", 0);
+    keywordHashMap.put("this", 0);
+    keywordHashMap.put("throw", 0);
+    keywordHashMap.put("throws", 0);
+    keywordHashMap.put("try", 0);
+    keywordHashMap.put("void", 0);
+    keywordHashMap.put("while", 0);
 
-    HashMap<String, Integer> symbols = new HashMap<String, Integer>();
+    HashMap<Character, Integer> symbolsHashMap = new HashMap<Character, Integer>();
+
+    symbolsHashMap.put('\'', 0);
+    symbolsHashMap.put('\"', 0);
+    symbolsHashMap.put('[', 0);
+    symbolsHashMap.put('(', 0);
+    symbolsHashMap.put('{', 0);
+    symbolsHashMap.put(';', 0);
+    symbolsHashMap.put(']', 0);
+    symbolsHashMap.put(')', 0);
+    symbolsHashMap.put('}', 0);
 
     try {
       File file = new File("BPCodeAnalyzer.java");
       Scanner fs = new Scanner(file);
+
+      // count words
       ArrayList<String> words = new ArrayList<String>();
+      ArrayList<Character> symbols = new ArrayList<Character>();
 
       while (fs.hasNextLine()) {
         String line = fs.nextLine();
-        line = line.replaceAll("\\R", "");
-        line = line.replaceAll("\\W", " ");
-        for (String i : line.split("\\s+")) {
-          words.add(i);
+        String lineWithWords = line;
+        lineWithWords = line.replaceAll("\\R", ""); // remove newlines
+        lineWithWords = lineWithWords.replaceAll("\\W", " "); // remove non words
+        for (String i : lineWithWords.split("\\s+")) {
+          words.add(i.toLowerCase());
+        }
+
+        String lineWithSymbols = line;
+        lineWithSymbols = lineWithSymbols.replaceAll("\\R", ""); // remove newlines
+        lineWithSymbols = lineWithSymbols.replaceAll("[a-zA-Z0-9\\s]", "");
+        //System.out.println(lineWithSymbols);
+
+        for (char i : lineWithSymbols.toCharArray()) {
+          symbols.add(i);
         }
       }
 
-      HashMap<String, Integer> freq = new HashMap<String, Integer>();
+      HashMap<String, Integer> wordFreqHashMap = new HashMap<String, Integer>();
+      HashMap<Character, Integer> symbolFreqHashMap = new HashMap<Character, Integer>();
 
       for (String word : words) {
-        int count = freq.containsKey(word) ? freq.get(word) : 0;
-        freq.put(word, count + 1);
+        int count = wordFreqHashMap.containsKey(word)
+          ? wordFreqHashMap.get(word)
+          : 0;
+        wordFreqHashMap.put(word, count + 1);
       }
 
-      for (String word : freq.keySet()) {
-        if (javaKeywords.containsKey(word)) {
-          javaKeywords.put(word, freq.get(word));
+      for (String word : wordFreqHashMap.keySet()) {
+        if (keywordHashMap.containsKey(word)) {
+          keywordHashMap.put(word, wordFreqHashMap.get(word));
+        }
+      }
+
+      for (char ch : symbols) {
+        int count = symbolFreqHashMap.containsKey(ch)
+          ? symbolFreqHashMap.get(ch)
+          : 0;
+        symbolFreqHashMap.put(ch, count + 1);
+      }
+
+      for (char ch : symbolFreqHashMap.keySet()) {
+        if (symbolsHashMap.containsKey(ch)) {
+          symbolsHashMap.put(ch, symbolFreqHashMap.get(ch));
         }
       }
 
@@ -97,19 +137,30 @@ public class BPCodeAnalyzer {
     } catch (FileNotFoundException e) {
       System.out.println("An error occured");
     }
-
     //print results
     int numOfKeywords = 0;
-    for (String i : javaKeywords.keySet()) {
-      numOfKeywords += javaKeywords.get(i);
+    for (String i : keywordHashMap.keySet()) {
+      numOfKeywords += keywordHashMap.get(i);
     }
 
-    System.out.println("Number of Keywords: " + numOfKeywords);
+    System.out.println("Number of Keywords: " + numOfKeywords + "\n");
 
     System.out.println("Occurrences of Keywords");
 
-    for (String i : javaKeywords.keySet()) {
-      System.out.println("    " + i + ": " + javaKeywords.get(i));
+    for (String i : keywordHashMap.keySet()) {
+      System.out.println("    " + i + ": " + keywordHashMap.get(i));
+    }
+
+    int numOfSymbols = 0;
+    for (char i : symbolsHashMap.keySet()) {
+      numOfSymbols += symbolsHashMap.get(i);
+    }
+    System.out.println("Number of Symbols: " + numOfSymbols + "\n");
+
+    System.out.println("Occurrences of Keywords");
+
+    for (char i : symbolsHashMap.keySet()) {
+      System.out.println("    " + i + ": " + symbolsHashMap.get(i));
     }
   }
 }
