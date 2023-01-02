@@ -1,5 +1,6 @@
 {
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "mwpb.java-prettier-formatter",
-    "javascript.format.enable": true
+    "javascript.format.enable": true,
+    "FSharp.suggestGitignore": false
 }
